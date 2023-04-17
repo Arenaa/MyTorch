@@ -31,7 +31,7 @@ class Sigmoid:
 
     def backward(self):
 
-        dAdZ = self.A * (1- self.A)
+        dAdZ = self.A - np.dot(self.A, self.A)
 
         return dAdZ
 
@@ -64,7 +64,7 @@ class ReLU:
     """
     def forward(self, Z):
 
-        self.A = np.maximum(Z, 0)
+        self.A = np.max(Z, 0)
 
         return self.A
 
