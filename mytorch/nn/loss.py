@@ -14,19 +14,23 @@ class MSELoss:
 
         self.A = A
         self.Y = Y
-        self.N = None  # TODO
-        self.C = None  # TODO
-        se = None  # TODO
-        sse = None  # TODO
-        mse = None  # TODO
+        self.N = A.shape[0]
+        self.C = A.shape[1]
+        se = (A - Y) * (A -Y)
+        self.Ones_N =  np.ones((self.N,1))
+        self.Ones_C =  np.ones((self.C,1))
+        print(self.Ones_C.T.shape, se.shape)
 
-        return NotImplemented
+        sse = self.Ones_N.T @ se @ self.Ones_C
+        mse = sse / (2 * self.N * self.C)
+
+        return mse
 
     def backward(self):
 
-        dLdA = None
+        dLdA = (self.A - self.Y) / (self.N * self.C)
 
-        return NotImplemented
+        return dLdA
 
 
 class CrossEntropyLoss:
@@ -43,21 +47,22 @@ class CrossEntropyLoss:
         """
         self.A = A
         self.Y = Y
-        N = None  # TODO
-        C = None  # TODO
+        self.N = A.shape[0]
+        self.C = A.shape[1]
 
-        Ones_C = None  # TODO
-        Ones_N = None  # TODO
+        Ones_N =  np.ones((self.N, 1))
+        Ones_C =  np.ones((self.C, 1))
 
-        self.softmax = None  # TODO
-        crossentropy = None  # TODO
-        sum_crossentropy = None  # TODO
-        L = sum_crossentropy / N
+        self.softmax = np.exp(A)/np.sum(np.exp(A),axis=0)
+        crossentropy = (-Y * np.log(self.softmax)) @ Ones_C
+        sum_crossentropy = Ones_N.T @ crossentropy
+        sum_crossentropy = - np.sum(Y * np.log(self.softmax))
+        L = sum_crossentropy / self.N
 
-        return NotImplemented
+        return L
 
     def backward(self):
 
-        dLdA = None  # TODO
+        dLdA = self.softmax - self.Y
 
-        return NotImplemented
+        return dLdA
