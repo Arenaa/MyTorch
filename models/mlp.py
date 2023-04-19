@@ -37,7 +37,7 @@ class MLP0:
             self.dLdZ0 = dLdZ0
             self.dLdA0 = dLdA0
 
-        return NotImplemented
+        return dLdA0
 
 
 class MLP1:
@@ -90,7 +90,7 @@ class MLP1:
             self.dLdZ0 = dLdZ0
             self.dLdA0 = dLdA0
 
-        return NotImplemented
+        return dLdA0
 
 
 class MLP4:
@@ -157,4 +157,4 @@ class MLP4:
                 self.dLdZ = [dLdZ] + self.dLdZ
                 self.dLdA = [dLdA] + self.dLdA
 
-        return NotImplemented
+        return dLdA[-1]
