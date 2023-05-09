@@ -25,27 +25,27 @@ class BatchNorm1d:
         So see what values you need to recompute when eval is False.
         """
         self.Z = Z
-        self.N = None  # TODO
-        self.M = None  # TODO
-        self.V = None  # TODO
+        self.N = Z.shape[0]
+        self.M = (1/self.N) * np.sum(Z, axis=0)
+        self.V = (1/self.N) * np.sum((self.Z - self.M)**2, axis=0)
 
         if eval == False:
             # training mode
-            self.NZ = None  # TODO
-            self.BZ = None  # TODO
+            self.NZ = (self.Z - self.M) / np.sqrt(self.V **2 + self.eps)
+            self.BZ = (self.NZ * self.BW) + self.Bb
 
-            self.running_M = None  # TODO
-            self.running_V = None  # TODO
+            self.running_M = self.alpha * self.running_M + (1 - self.alpha) * self.M
+            self.running_V = self.alpha * self.running_V + (1 - self.alpha) * self.V
         else:
             # inference mode
-            self.NZ = None  # TODO
-            self.BZ = None  # TODO
+            self.NZ = (self.Z - self.running_M) / np.sqrt( self.running_V + self.eps)
+            self.BZ = (self.NZ * self.BW) + self.Bb
 
         return self.BZ
 
     def backward(self, dLdBZ):
 
-        self.dLdBW = None  # TODO
+        self.dLdBW = np.sum(dLdBZ)
         self.dLdBb = None  # TODO
 
         dLdNZ = None  # TODO
